@@ -13,8 +13,13 @@ def first_fit( M, p ):
             if (M.memory[i+j] != "."):
                 break
             blocks.append( i + j )
+
             if len(blocks) == p.memory:
                 return blocks
+
+            if (i + j == len(M.memory) - 1):
+                break
+
     return []
 
 def worst_fit( M, p ):
@@ -99,14 +104,52 @@ def noncontig(M, p):
 
     return config
 
+def get_next_fit( M ):
+    """
+    To remember the previous call of the function, wrap next_fit in a closure. 
+    i_ is the index where the search left off. Start i_ at the first free
+    index in memory, if one is available.
+    """
+    i_ = 0
+    while ( i_ < M.main_mem ):
+        if (M.memory[i_] == '.'):
+            break
 
+        i_ += 1
+
+    def next_fit(M, p):
+        nonlocal i_
+        visited = 0
+        blocks = []
+
+        while (True):
+
+            if (len(blocks) == p.memory):
+                return blocks
+
+            elif M.memory[i_ % M.main_mem] == '.':
+                blocks.append(i_ % M.main_mem)
+
+            else:
+                blocks = []
+
+            i_ += 1
+            visited += 1
+
+            # If we've come full circle, set i back to it's original value
+            # and bail out.
+            if (visited == M.main_mem):
+                i_ -= M.main_mem
+                break
+
+        if (len(blocks) == p.memory):
+            return blocks
+        else:
+            return []
+
+    return next_fit
 
 if __name__ == '__main__':
-    f_name = "input1.txt"
-    plist = parse(f_name)
-    M = Memory(plist = plist)
-    M.display()
-    
-    p1 = Process('Q', 100, 0, 50)
-    l = first_fit(M, p1)
-    print(l)
+    pass
+    #f_name = "input1.txt"
+    #plist = parse(f_name)

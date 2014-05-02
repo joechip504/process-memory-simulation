@@ -52,7 +52,7 @@ class Memory:
             if (self.memory[i] == p.name):
                 self.memory[i] = '.'
 
-    def add_all(self, plist, t, method = None):
+    def add_all(self, plist, t, method, quiet = True):
         """
         Call add() on all processes arriving at time t. Returns
         total number of processes added.
@@ -64,7 +64,9 @@ class Memory:
 
                 # If the add was unsuccessful, defragment and try again.
                 if (rc == 0):
-                    self.defragment()
+                    self.defragment(quiet = quiet)
+                    if (quiet):
+                        self.display(t=t)
 
                     #If a defragment did not help, game over.
                     rc = self.add(p, method)
@@ -97,32 +99,40 @@ class Memory:
                 print()
             print(self.memory[i], end="")
 
-        print()
+        print('\n')
 
-    def defragment(self):
+    def defragment(self, quiet = True):
         """
         Shift all processes in memory as far left as possible. Display
         data about the state of memory afterward.
         """
 
         pset = set()
+        tmp = []
+        relocated = False
+        for i in self.memory:
+            if (i == '.'):
+                relocated = True
 
-        for i in range(len(self.memory) - 1):
-            for j in range(i, len(self.memory) - 1):
-                if (self.memory[i] == '.'):
+            else:
+                tmp.append(i)
+                if (relocated):
+                    pset.add(i)
 
-                    self.memory[i], self.memory[i+1] = \
-                    self.memory[i+1], self.memory[i]
-
-                    # If a process has moved, add it to the pset
-                    if (self.memory[i] != '.'):
-                        pset.add(self.memory[i])
+        while (len(tmp) < len(self.memory)):
+            tmp.append('.')
 
         free = sum([1 for i in self.memory if i == '.'])
 
-        print("Relocated {0} processes to create a free memory block of"
-                " {1} units ({2:.2f}% of total memory).".format(
-                    len(pset), free, 100*free/len(self.memory)))
+        if (quiet):
+            print()
+            print("Relocated {0} processes to create a free memory block of"
+                            " {1} units ({2:.2f}% of total memory).".format(
+                                len(pset), free, 100*free/len(self.memory)))
+            print()
+
+        self.memory = tmp
+
 
 if __name__ == '__main__':
     m = Memory(1600, 80)
