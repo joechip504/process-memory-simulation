@@ -1,6 +1,13 @@
 #Operating Systems Project 2
 ##Joe Pringle
 
+#Files Included
+* allocation_algorithms.py
+* memory.py
+* memsim.py
+* parser.py
+* README.md
+
 #Usage
 Written using python3. Sample usage:
 

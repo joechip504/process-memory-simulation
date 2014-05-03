@@ -45,11 +45,11 @@ def run_simulation( plist, algorithm = None, quiet = True):
             if (changed > 0 and quiet):
                 M.display(t=TIME)
 
-        # If the user is controlling the loop, reset and continue.
+        # If the user is controlling the loop, just continue.
         if (not quiet):
             M.display(t=TIME)
-            M = Memory(MAIN_MEM, OS_MEM, plist)
-            TIME = 0
+            #M = Memory(MAIN_MEM, OS_MEM, plist)
+            #TIME = 0
             continue
 
         break
