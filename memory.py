@@ -70,8 +70,6 @@ class Memory:
                 # If the add was unsuccessful, defragment and try again.
                 if (rc == 0):
                     self.defragment(quiet = quiet)
-                    if (quiet):
-                        self.display(t=t)
 
                     #If a defragment did not help, game over.
                     rc = self.add(p, method)
@@ -111,6 +109,8 @@ class Memory:
         Shift all processes in memory as far left as possible. Display
         data about the state of memory afterward.
         """
+        if(quiet):
+            print("Performing defragmentation..")
 
         pset = set()
         tmp = []
@@ -130,7 +130,7 @@ class Memory:
         free = sum([1 for i in self.memory if i == '.'])
 
         if (quiet):
-            print()
+            print("Defragmentation Completed")
             print("Relocated {0} processes to create a free memory block of"
                             " {1} units ({2:.2f}% of total memory).".format(
                                 len(pset), free, 100*free/len(self.memory)))
