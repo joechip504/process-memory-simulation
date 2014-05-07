@@ -22,6 +22,11 @@ class Memory:
         Load all processes starting at time 0 into memory using
         contiguous memory allocation.
         """
+        size = sum([p.memory for p in plist if p.arrival_time == 0])
+        if (size > self.main_mem):
+            print("ERROR: OUT-OF-MEMORY. Unable to load initial processes.")
+            sys.exit(1)
+
         for p in plist:
             if (p.arrival_time != 0):
                 continue
